@@ -1,4 +1,4 @@
-project-name = <NOT-SETUP-YET>
+project-name = ai-village-capture-the-flag-defcon31
 
 default:
 	@echo "Project: $(project-name)\n"
@@ -16,11 +16,8 @@ setup-python:
 	poetry install --no-root
 	poetry run ipython kernel install --user \
 	 --name "$(project-name)" \
-	 --display-name "Kaggle: $(project-name)" \
+	 --display-name "Kaggle: CTF" \
 	 --env PYTHONPATH $$(pwd)
-	@echo '{"venvPath": "'$$(dirname $$(poetry env info --path))'",' \
-	 '"venv": "'$$(basename $$(poetry env info --path))'"}' \
-	 > pyrightconfig.json
 
 teardown-python:
 	jupyter kernelspec remove "$(project-name)" -y
