@@ -12,6 +12,11 @@ data/raw/sample_submission.csv:
 	kaggle competitions download -c $(project-name) -p data/raw
 	unzip -d data/raw $$(find data/raw -name '*zip')
 
+submit:
+	kaggle competitions submit $(project-name) \
+	 -f data/processed/submission.csv \
+	 -m "got next flag"
+
 setup-python:
 	poetry install --no-root
 	poetry run ipython kernel install --user \
