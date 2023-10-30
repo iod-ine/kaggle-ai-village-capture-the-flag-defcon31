@@ -5,12 +5,13 @@ class Tracker:
     def __init__(self):
         self.dict = {}
         self.df = None
+        self.query_func = self._raise
 
     def query(self, input_data):
         if input_data in self.dict:
             return self.dict[input_data]
 
-        out = query(input_data)
+        out = self.query_func(input_data)
 
         if "flag" in out:
             raise RuntimeError(f"Found the flag using '{input_data}' as input!")
@@ -20,12 +21,35 @@ class Tracker:
         return out
 
     def top(self, n=10):
-        self.df = pd.DataFrame({"word": self.dict.keys(), "score": tracker.dict.values()})
+        self.df = pd.DataFrame(
+            {
+                "word": self.dict.keys(),
+                "score": self.dict.values(),
+            }
+        )
         return self.df.sort_values(by="score", ascending=False).head(n)
+
+    @staticmethod
+    def _raise(*args, **kwargs):
+        raise ValueError("No query function set")
 
 
 if __name__ == "__main__":
     tracker = Tracker()
+
+    import requests
+
+    input_data = "attention"
+
+    def query(input_data):
+        response = requests.post(
+            "http://semantle.advml.com/score",
+            json={"data": input_data},
+        )
+        return response.json()
+
+    tracker.query_func = query
+
     tracker.query("attention")
     tracker.query("transformer")
     tracker.query("article")
